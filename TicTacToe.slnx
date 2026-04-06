@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="TicTacToe/TicTacToe.csproj">
+    <Deploy />
+  </Project>
+</Solution>
