@@ -12,6 +12,11 @@ public partial class GamePage : ContentPage
 
 	Label scoreLabel;
 	Grid gameGrid;
+
+	Button resetButton;
+	Button switchButton;
+
+	Label turnLabel;
     public GamePage(bool vsBot)
 	{
 		Title = "Mäng";
@@ -31,19 +36,26 @@ public partial class GamePage : ContentPage
 
 		CreateGrid();
 
-		var resetButton = new Button
+		resetButton = new Button
 		{
 			Text = "Alusta uuesti",
 			Command = new Command(OnResetClicked)
 		};
 
-		var switchButton = new Button
+		switchButton = new Button
 		{
 			Text = "Vaheta mängija",
 			Command = new Command(OnSwitchFirstClicked)
 		};
 
-		Content = new VerticalStackLayout
+		turnLabel = new Label
+		{
+			Text = $"Mängija käik: {game.CurrentPlayer}",
+			FontSize = 18,
+			HorizontalOptions = LayoutOptions.Center
+		};
+
+        Content = new VerticalStackLayout
 		{
 			Padding = 20,
 			Spacing = 10,
@@ -51,6 +63,7 @@ public partial class GamePage : ContentPage
 			{
 				scoreLabel,
 				gameGrid,
+				turnLabel,
 				new HorizontalStackLayout
 				{
 					Children =
@@ -65,15 +78,23 @@ public partial class GamePage : ContentPage
 
     private void OnSwitchFirstClicked(object obj)
     {
-		redScore = 0;
-		blueScore = 0;
-		UpdateScore();
+        game.CurrentPlayer = game.CurrentPlayer == Player.Red ? Player.Blue : Player.Red;
+        redScore = 0;
+        blueScore = 0;
+        UpdateScore();
 		ResetBoard();
+
+        UpdateTurnLabel();
+
     }
 
     private void OnResetClicked(object obj)
     {
-		game.CurrentPlayer = game.CurrentPlayer == Player.Red ? Player.Blue : Player.Red;
+        redScore = 0;
+        blueScore = 0;
+        UpdateScore();
+        ResetBoard();
+		UpdateTurnLabel();
     }
 
     private void CreateGrid()
@@ -96,7 +117,7 @@ public partial class GamePage : ContentPage
 				int r = row;
 				int c = col;
 
-				btn.Clicked += (s, e) => OnCellClicked(r, c, btn);
+				btn.Clicked += async (s, e) => await OnCellClicked(r, c, btn);
 
 				buttons[row, col] = btn;
 				gameGrid.Add(btn, col, row);
@@ -107,12 +128,15 @@ public partial class GamePage : ContentPage
 
     private async Task OnCellClicked(int row, int col, Button btn)
     {
+		var currentPlayer = game.CurrentPlayer;
+
         if (!game.MakeMove(row, col))	
         {
 			return;
         }
 
-		btn.BackgroundColor = game.CurrentPlayer == Player.Blue ? Colors.Red : Colors.Blue;
+		btn.BackgroundColor = currentPlayer == Player.Red ? Colors.Red : Colors.Blue;
+		UpdateTurnLabel();
 
 		var winner = game.CheckWinner();
 
@@ -129,9 +153,21 @@ public partial class GamePage : ContentPage
 
 			UpdateScore();
 
-			await DisplayAlert("Mäng lõppenud", $"{winner} võitis!", "OK");
+			await DisplayAlertAsync("Mäng lõppenud", $"{winner} võitis!", "OK");
+			ResetBoard();
+			return;
+        }
+
+		if (game.IsDraw())
+		{
+			await DisplayAlertAsync("Mäng lõppenud", "Viik!", "OK");
 			ResetBoard();
         }
+    }
+
+    private void UpdateTurnLabel()
+    {
+		turnLabel.Text = $"Mängija käik: {game.CurrentPlayer}";
     }
 
     private void ResetBoard()

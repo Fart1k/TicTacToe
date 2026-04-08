@@ -2,10 +2,25 @@ namespace TicTacToe.Pages;
 
 public partial class RulesPage : ContentPage
 {
-	public RulesPage()
+	Label titleLabel;
+	Label rulesLabel;
+    public RulesPage()
 	{
 		Title = "Reeglid";
-		Content = new ScrollView
+
+		titleLabel = new Label
+		{
+			Text = "Reeglid",
+			FontSize = 32,
+			HorizontalOptions = LayoutOptions.Center
+        };
+
+		rulesLabel =new Label
+		{
+			Text = "Trips-Traps-Trull on klassikaline lauamäng, kus mängijad üritavad järjestada kolm oma sümbolit (X või O) ritta, veergu või diagonaali. Mängijad vahetavad käike, kuni üks neist saavutab kolm järjestikust sümbolit või laud on täis, mis tähendab viiki."
+		};
+
+        Content = new ScrollView
 		{
 			Content = new VerticalStackLayout
 			{
@@ -13,16 +28,7 @@ public partial class RulesPage : ContentPage
 				Spacing = 20,
 				Children =
 				{
-					new Label
-					{
-						Text = "Reeglid",
-						FontSize = 32,
-						HorizontalOptions = LayoutOptions.Center
-					},
-					new Label
-					{
-						Text = "Trips-Traps-Trull on klassikaline lauamäng, kus mängijad üritavad järjestada kolm oma sümbolit (X või O) ritta, veergu või diagonaali. Mängijad vahetavad käike, kuni üks neist saavutab kolm järjestikust sümbolit või laud on täis, mis tähendab viiki."
-					}
+					titleLabel,	rulesLabel
 				}
 			}
 		};

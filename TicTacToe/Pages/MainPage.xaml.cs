@@ -2,9 +2,35 @@
 {
     public partial class MainPage : ContentPage
     {
+        Label titleLabel;
+        Button startBtn;
+        Button rulesBtn;
         public MainPage()
         {
-            InitializeComponent();
+            titleLabel = new Label
+            {
+                Text = "Trips-Traps-Trull",
+                FontSize = 32,
+                HorizontalOptions = LayoutOptions.Center
+            };
+
+            startBtn = new Button
+            {
+                Text = "Alusta",
+                Command = new Command(async () =>
+                {
+                    await Navigation.PushAsync(new ModePage());
+                })
+            };
+
+            rulesBtn = new Button
+            {
+                Text = "Reeglid",
+                Command = new Command(async () =>
+                {
+                    await Navigation.PushAsync(new RulesPage());
+                })
+            };
 
             Content = new VerticalStackLayout
             {
@@ -12,30 +38,7 @@
                 Spacing = 20,
                 Children =
                 {
-                    new Label
-                    {
-                        Text = "Trips-Traps-Trull",
-                        FontSize = 32,
-                        HorizontalOptions = LayoutOptions.Center
-                    },
-
-                    new Button
-                    {
-                        Text = "Alusta",
-                        Command = new Command(async () =>
-                        {
-                            await Navigation.PushAsync(new ModePage());
-                        })
-                    },
-
-                    new Button
-                    {
-                        Text = "Reeglid",
-                        Command = new Command(async () =>
-                        {
-                            await Navigation.PushAsync(new RulesPage());
-                        })
-                    }
+                    titleLabel, startBtn, rulesBtn
                 }
             };
         }
