@@ -77,10 +77,14 @@ namespace TicTacToe.Models
             return CheckWinner() == Player.None;
         }
 
-        public void ResetGame()
+        public void ResetGame(bool keepCurrentPlayer)
         {
             Board = new Player[3, 3];
-            CurrentPlayer = Player.Red;
+
+            if (!keepCurrentPlayer)
+            {
+                CurrentPlayer = Player.Red;
+            }
         }
     }
 }

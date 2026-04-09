@@ -82,7 +82,7 @@ public partial class GamePage : ContentPage
         redScore = 0;
         blueScore = 0;
         UpdateScore();
-		ResetBoard();
+		ResetBoard(true);
 
         UpdateTurnLabel();
 
@@ -93,7 +93,7 @@ public partial class GamePage : ContentPage
         redScore = 0;
         blueScore = 0;
         UpdateScore();
-        ResetBoard();
+        ResetBoard(false);
 		UpdateTurnLabel();
     }
 
@@ -154,14 +154,14 @@ public partial class GamePage : ContentPage
 			UpdateScore();
 
 			await DisplayAlertAsync("Mäng lõppenud", $"{winner} võitis!", "OK");
-			ResetBoard();
+			ResetBoard(false);
 			return;
         }
 
 		if (game.IsDraw())
 		{
 			await DisplayAlertAsync("Mäng lõppenud", "Viik!", "OK");
-			ResetBoard();
+			ResetBoard(false);
         }
     }
 
@@ -170,9 +170,9 @@ public partial class GamePage : ContentPage
 		turnLabel.Text = $"Mängija käik: {game.CurrentPlayer}";
     }
 
-    private void ResetBoard()
+    private void ResetBoard(bool keepCurrentPlayer)
     {
-		game.ResetGame();
+		game.ResetGame(keepCurrentPlayer);
 
 		foreach (var btn in buttons)
 		{
